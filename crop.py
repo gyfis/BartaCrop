@@ -88,7 +88,7 @@ if __name__ == '__main__':
             page4.mediaBox.lowerRight = bottom_right
 
             if order is not default_order:
-                [output.addPage([page1, page2, page3, page4][i]) for i in order]
+                [output.addPage([page1, page2, page3, page4][i - 1]) for i in order]
             elif upside_down:
                 output.addPage(page3)
                 output.addPage(page1)
