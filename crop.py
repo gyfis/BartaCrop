@@ -1,4 +1,4 @@
-from pyPdf import PdfFileWriter, PdfFileReader
+from PyPDF2 import PdfFileWriter, PdfFileReader
 import shutil
 import os
 import argparse
@@ -40,13 +40,13 @@ if __name__ == '__main__':
 
         output_file = '%s%s.pdf' % (input_file[:-4], filename_append)
 
-        input1 = PdfFileReader(file(input_file, 'rb'))
-        input2 = PdfFileReader(file('2' + input_file, 'rb'))
-        input3 = PdfFileReader(file('3' + input_file, 'rb'))
-        input4 = PdfFileReader(file('4' + input_file, 'rb'))
+        input1 = PdfFileReader(open(input_file, 'rb'))
+        input2 = PdfFileReader(open('2' + input_file, 'rb'))
+        input3 = PdfFileReader(open('3' + input_file, 'rb'))
+        input4 = PdfFileReader(open('4' + input_file, 'rb'))
 
         output = PdfFileWriter()
-        output_stream = file(output_file, 'wb')
+        output_stream = open(output_file, 'wb')
 
         pages = input1.getNumPages()
 
