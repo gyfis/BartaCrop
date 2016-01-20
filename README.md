@@ -2,7 +2,9 @@
 
 ### Crop the slides of your favorite MFF teacher today
 
-Skript splituje PDF soubory, které mají 4 slajdy na stránku, na pdf s jedním slajdem na stránce. 
+Skript splituje PDF soubory, které mají 4 slajdy na stránku, na pdf s jedním slajdem na stránce.
+ 
+Testováno na OS X, skript funguje v Python 2 & 3
 
 Argumenty:
 
