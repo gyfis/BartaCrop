@@ -1,6 +1,4 @@
 from PyPDF2 import PdfFileWriter, PdfFileReader
-import shutil
-import os
 import argparse
 
 __author__ = 'Gyfis'
@@ -33,27 +31,26 @@ if __name__ == '__main__':
     height_margin = margin
 
     for input_file in input_files:
-
-        shutil.copy(input_file, '2' + input_file)
-        shutil.copy(input_file, '3' + input_file)
-        shutil.copy(input_file, '4' + input_file)
-
         output_file = '%s%s.pdf' % (input_file[:-4], filename_append)
 
         input1 = PdfFileReader(open(input_file, 'rb'))
-        input2 = PdfFileReader(open('2' + input_file, 'rb'))
-        input3 = PdfFileReader(open('3' + input_file, 'rb'))
-        input4 = PdfFileReader(open('4' + input_file, 'rb'))
+        input2 = PdfFileReader(open(input_file, 'rb'))
+        input3 = PdfFileReader(open(input_file, 'rb'))
+        input4 = PdfFileReader(open(input_file, 'rb'))
 
         output = PdfFileWriter()
         output_stream = open(output_file, 'wb')
 
         pages = input1.getNumPages()
 
-        top_right = (input1.getPage(1).mediaBox.getUpperRight_x() - width_margin, input1.getPage(1).mediaBox.getUpperRight_y() - height_margin)
-        top_left = (input1.getPage(1).mediaBox.getUpperLeft_x() + width_margin, input1.getPage(1).mediaBox.getUpperLeft_y() - height_margin)
-        bottom_right = (input1.getPage(1).mediaBox.getLowerRight_x() - width_margin, input1.getPage(1).mediaBox.getLowerRight_y() + height_margin)
-        bottom_left = (input1.getPage(1).mediaBox.getLowerLeft_x() + width_margin, input1.getPage(1).mediaBox.getLowerLeft_y() + height_margin)
+        top_right = (input1.getPage(1).mediaBox.getUpperRight_x() - width_margin,
+                     input1.getPage(1).mediaBox.getUpperRight_y() - height_margin)
+        top_left = (input1.getPage(1).mediaBox.getUpperLeft_x() + width_margin,
+                    input1.getPage(1).mediaBox.getUpperLeft_y() - height_margin)
+        bottom_right = (input1.getPage(1).mediaBox.getLowerRight_x() - width_margin,
+                        input1.getPage(1).mediaBox.getLowerRight_y() + height_margin)
+        bottom_left = (input1.getPage(1).mediaBox.getLowerLeft_x() + width_margin,
+                       input1.getPage(1).mediaBox.getLowerLeft_y() + height_margin)
 
         middle_right = (top_right[0], bottom_right[1] + (top_right[1] - bottom_right[1]) / 2)
         middle_left = (top_left[0], bottom_left[1] + (top_left[1] - bottom_left[1]) / 2)
@@ -102,6 +99,3 @@ if __name__ == '__main__':
 
         output.write(output_stream)
         output_stream.close()
-        os.remove('2' + input_file)
-        os.remove('3' + input_file)
-        os.remove('4' + input_file)
