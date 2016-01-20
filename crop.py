@@ -14,7 +14,7 @@ if __name__ == '__main__':
                         help='The margin for the files. 13 and 18 are quite favorite.')
     parser.add_argument('-fa', '--filename_append', dest='filename_append', nargs='?', type=str, default='_cropped',
                         help='The append to use for the new filenames.')
-    parser.add_argument('-r', '--reverse', dest='reverse', nargs='?', type=bool, default=False,
+    parser.add_argument('-r', '--reverse', dest='reverse', nargs='?', type=bool, default=False, const=True,
                         help='The pdf origin system is left up instead of left bottom, which is the convention.')
     parser.add_argument('-o', '--order', dest='order', nargs='*', type=int, default=default_order,
                         help='Explicitly set the order of pages on the crop, in case the reverse doesn\'t help.')
@@ -43,14 +43,14 @@ if __name__ == '__main__':
 
         pages = input1.getNumPages()
 
-        top_right = (input1.getPage(1).mediaBox.getUpperRight_x() - width_margin,
-                     input1.getPage(1).mediaBox.getUpperRight_y() - height_margin)
-        top_left = (input1.getPage(1).mediaBox.getUpperLeft_x() + width_margin,
-                    input1.getPage(1).mediaBox.getUpperLeft_y() - height_margin)
-        bottom_right = (input1.getPage(1).mediaBox.getLowerRight_x() - width_margin,
-                        input1.getPage(1).mediaBox.getLowerRight_y() + height_margin)
-        bottom_left = (input1.getPage(1).mediaBox.getLowerLeft_x() + width_margin,
-                       input1.getPage(1).mediaBox.getLowerLeft_y() + height_margin)
+        top_right = (float(input1.getPage(1).mediaBox.getUpperRight_x()) - width_margin,
+                     float(input1.getPage(1).mediaBox.getUpperRight_y()) - height_margin)
+        top_left = (float(input1.getPage(1).mediaBox.getUpperLeft_x()) + width_margin,
+                    float(input1.getPage(1).mediaBox.getUpperLeft_y()) - height_margin)
+        bottom_right = (float(input1.getPage(1).mediaBox.getLowerRight_x()) - width_margin,
+                        float(input1.getPage(1).mediaBox.getLowerRight_y()) + height_margin)
+        bottom_left = (float(input1.getPage(1).mediaBox.getLowerLeft_x()) + width_margin,
+                       float(input1.getPage(1).mediaBox.getLowerLeft_y()) + height_margin)
 
         middle_right = (top_right[0], bottom_right[1] + (top_right[1] - bottom_right[1]) / 2)
         middle_left = (top_left[0], bottom_left[1] + (top_left[1] - bottom_left[1]) / 2)
