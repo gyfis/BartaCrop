@@ -41,63 +41,60 @@ if __name__ == '__main__':
         input4 = PdfFileReader(open(input_file, 'rb'))
 
         output = PdfFileWriter()
-        output_stream = open(output_file, 'wb')
+        with open(output_file, 'wb') as output_stream:
 
-        pages = input1.getNumPages()
+            top_right = (float(input1.getPage(1).mediaBox.getUpperRight_x()) - width_margin,
+                         float(input1.getPage(1).mediaBox.getUpperRight_y()) - height_margin)
+            top_left = (float(input1.getPage(1).mediaBox.getUpperLeft_x()) + width_margin,
+                        float(input1.getPage(1).mediaBox.getUpperLeft_y()) - height_margin)
+            bottom_right = (float(input1.getPage(1).mediaBox.getLowerRight_x()) - width_margin,
+                            float(input1.getPage(1).mediaBox.getLowerRight_y()) + height_margin)
+            bottom_left = (float(input1.getPage(1).mediaBox.getLowerLeft_x()) + width_margin,
+                           float(input1.getPage(1).mediaBox.getLowerLeft_y()) + height_margin)
 
-        top_right = (float(input1.getPage(1).mediaBox.getUpperRight_x()) - width_margin,
-                     float(input1.getPage(1).mediaBox.getUpperRight_y()) - height_margin)
-        top_left = (float(input1.getPage(1).mediaBox.getUpperLeft_x()) + width_margin,
-                    float(input1.getPage(1).mediaBox.getUpperLeft_y()) - height_margin)
-        bottom_right = (float(input1.getPage(1).mediaBox.getLowerRight_x()) - width_margin,
-                        float(input1.getPage(1).mediaBox.getLowerRight_y()) + height_margin)
-        bottom_left = (float(input1.getPage(1).mediaBox.getLowerLeft_x()) + width_margin,
-                       float(input1.getPage(1).mediaBox.getLowerLeft_y()) + height_margin)
+            middle_right = (top_right[0], bottom_right[1] + (top_right[1] - bottom_right[1]) / 2)
+            middle_left = (top_left[0], bottom_left[1] + (top_left[1] - bottom_left[1]) / 2)
+            top_middle = (top_left[0] + (top_right[0] - top_left[0]) / 2, top_left[1])
+            bottom_middle = (bottom_left[0] + (bottom_right[0] - bottom_left[0]) / 2, bottom_left[1])
 
-        middle_right = (top_right[0], bottom_right[1] + (top_right[1] - bottom_right[1]) / 2)
-        middle_left = (top_left[0], bottom_left[1] + (top_left[1] - bottom_left[1]) / 2)
-        top_middle = (top_left[0] + (top_right[0] - top_left[0]) / 2, top_left[1])
-        bottom_middle = (bottom_left[0] + (bottom_right[0] - bottom_left[0]) / 2, bottom_left[1])
+            middle = (top_middle[0], middle_left[1])
 
-        middle = (top_middle[0], middle_left[1])
+            for i in range(input1.getNumPages()):
+                page1 = input1.getPage(i)
+                page1.mediaBox.upperLeft = top_left
+                page1.mediaBox.upperRight = top_middle
+                page1.mediaBox.lowerLeft = middle_left
+                page1.mediaBox.lowerRight = middle
 
-        for i in range(0, pages):
-            page1 = input1.getPage(i)
-            page1.mediaBox.upperLeft = top_left
-            page1.mediaBox.upperRight = top_middle
-            page1.mediaBox.lowerLeft = middle_left
-            page1.mediaBox.lowerRight = middle
+                page2 = input2.getPage(i)
+                page2.mediaBox.upperLeft = top_middle
+                page2.mediaBox.upperRight = top_right
+                page2.mediaBox.lowerLeft = middle
+                page2.mediaBox.lowerRight = middle_right
 
-            page2 = input2.getPage(i)
-            page2.mediaBox.upperLeft = top_middle
-            page2.mediaBox.upperRight = top_right
-            page2.mediaBox.lowerLeft = middle
-            page2.mediaBox.lowerRight = middle_right
+                page3 = input3.getPage(i)
+                page3.mediaBox.upperLeft = middle_left
+                page3.mediaBox.upperRight = middle
+                page3.mediaBox.lowerLeft = bottom_left
+                page3.mediaBox.lowerRight = bottom_middle
 
-            page3 = input3.getPage(i)
-            page3.mediaBox.upperLeft = middle_left
-            page3.mediaBox.upperRight = middle
-            page3.mediaBox.lowerLeft = bottom_left
-            page3.mediaBox.lowerRight = bottom_middle
+                page4 = input4.getPage(i)
+                page4.mediaBox.upperLeft = middle
+                page4.mediaBox.upperRight = middle_right
+                page4.mediaBox.lowerLeft = bottom_middle
+                page4.mediaBox.lowerRight = bottom_right
 
-            page4 = input4.getPage(i)
-            page4.mediaBox.upperLeft = middle
-            page4.mediaBox.upperRight = middle_right
-            page4.mediaBox.lowerLeft = bottom_middle
-            page4.mediaBox.lowerRight = bottom_right
+                if order is not default_order:
+                    [output.addPage([page1, page2, page3, page4][i - 1]) for i in order]
+                elif upside_down:
+                    output.addPage(page3)
+                    output.addPage(page1)
+                    output.addPage(page4)
+                    output.addPage(page2)
+                else:
+                    output.addPage(page1)
+                    output.addPage(page2)
+                    output.addPage(page3)
+                    output.addPage(page4)
 
-            if order is not default_order:
-                [output.addPage([page1, page2, page3, page4][i - 1]) for i in order]
-            elif upside_down:
-                output.addPage(page3)
-                output.addPage(page1)
-                output.addPage(page4)
-                output.addPage(page2)
-            else:
-                output.addPage(page1)
-                output.addPage(page2)
-                output.addPage(page3)
-                output.addPage(page4)
-
-        output.write(output_stream)
-        output_stream.close()
+            output.write(output_stream)
