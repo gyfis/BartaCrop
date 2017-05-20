@@ -8,17 +8,15 @@ __author__ = 'Gyfis'
 
 if __name__ == '__main__':
 
-    default_order = [1, 2, 3, 4]
-
     parser = argparse.ArgumentParser(description="Easily crop slides from your favorite teacher - BartaK!")
     parser.add_argument('input', nargs='*', help='The files you want to convert.')
-    parser.add_argument('-m', '--margin', dest='margin', type=float, default=18.0,
+    parser.add_argument('-m', '--margin', type=float, default=18.0,
                         help='The margin for the files. 13 and 18 are quite favorite.')
     parser.add_argument('-fa', '--filename-append', default='_cropped',
                         help='The append to use for the new filenames.')
     parser.add_argument('-r', '--reverse', action='store_true',
                         help='The pdf origin system is left up instead of left bottom, which is the convention.')
-    parser.add_argument('-o', '--order', nargs=4, type=int, default=default_order,
+    parser.add_argument('-o', '--order', nargs=4, type=int, default=[1, 2, 3, 4],
                         help='Explicitly set the order of pages on the crop, in case the reverse doesn\'t help.')
 
     args = parser.parse_args()
@@ -26,8 +24,11 @@ if __name__ == '__main__':
     input_files = args.input
     margin = args.margin
     filename_append = args.filename_append
-    upside_down = args.reverse
     order = args.order
+
+    if args.reverse:
+        new_order = [order[i-1] for i in [3, 1, 4, 2]]
+        order = new_order
 
     width_margin = margin
     height_margin = margin
@@ -84,17 +85,9 @@ if __name__ == '__main__':
                 page4.mediaBox.lowerLeft = bottom_middle
                 page4.mediaBox.lowerRight = bottom_right
 
-                if order is not default_order:
-                    [output.addPage([page1, page2, page3, page4][i - 1]) for i in order]
-                elif upside_down:
-                    output.addPage(page3)
-                    output.addPage(page1)
-                    output.addPage(page4)
-                    output.addPage(page2)
-                else:
-                    output.addPage(page1)
-                    output.addPage(page2)
-                    output.addPage(page3)
-                    output.addPage(page4)
+                pages = [page1, page2, page3, page4]
+
+                for i in order:
+                    output.addPage(pages[i-1])
 
             output.write(output_stream)
