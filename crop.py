@@ -11,14 +11,14 @@ if __name__ == '__main__':
     default_order = [1, 2, 3, 4]
 
     parser = argparse.ArgumentParser(description="Easily crop slides from your favorite teacher - BartaK!")
-    parser.add_argument('input', nargs='*', default=[], help='The files you want to convert.')
-    parser.add_argument('-m', '--margin', dest='margin', nargs='?', type=float, default=18.0,
+    parser.add_argument('input', nargs='*', help='The files you want to convert.')
+    parser.add_argument('-m', '--margin', dest='margin', type=float, default=18.0,
                         help='The margin for the files. 13 and 18 are quite favorite.')
-    parser.add_argument('-fa', '--filename_append', dest='filename_append', nargs='?', type=str, default='_cropped',
+    parser.add_argument('-fa', '--filename-append', default='_cropped',
                         help='The append to use for the new filenames.')
-    parser.add_argument('-r', '--reverse', dest='reverse', nargs='?', type=bool, default=False, const=True,
+    parser.add_argument('-r', '--reverse', action='store_true',
                         help='The pdf origin system is left up instead of left bottom, which is the convention.')
-    parser.add_argument('-o', '--order', dest='order', nargs='*', type=int, default=default_order,
+    parser.add_argument('-o', '--order', nargs=4, type=int, default=default_order,
                         help='Explicitly set the order of pages on the crop, in case the reverse doesn\'t help.')
 
     args = parser.parse_args()
