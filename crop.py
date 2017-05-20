@@ -27,8 +27,7 @@ if __name__ == '__main__':
     order = args.order
 
     if args.reverse:
-        new_order = [order[i-1] for i in [3, 1, 4, 2]]
-        order = new_order
+        order = [order[i-1] for i in [3, 1, 4, 2]]
 
     width_margin = margin
     height_margin = margin
